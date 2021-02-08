@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import './Posts.css';
 import Stars from './Stars';
 
-const Posts = ({ products, posts, viewers, loading, changePosts, changeViewer }) => {
+const Posts = ({ products, posts, loading, changePosts, changeViewer }) => {
   const [showAll, setShowAll] = useState(false);
+  const [viewerIds] = useState([1,2,3]);
+  const [productIds] = useState([1,2,3]);
   const [buttonText, setButtonText] = useState('Show All Ratings');
   if (loading) {
     return <h2>Loading...</h2>;
@@ -21,7 +23,6 @@ const Posts = ({ products, posts, viewers, loading, changePosts, changeViewer })
     changePosts(e.target.value)
   }
   const onSelectViewer = (e) => {
-    [e.target.name] = e.target.value;
     changeViewer(e.target.value)
   }
 
@@ -31,8 +32,8 @@ const Posts = ({ products, posts, viewers, loading, changePosts, changeViewer })
         <div className="col-6 selectProduct">
           <label htmlFor="sel1">Choose Product ID:&nbsp;&nbsp;</label>
           <select className="custom-select" onChange={onSelectProduct} id="select1">
-            {products.map(product => (
-              <option key={product.product_id}>{product.product_id}</option>
+            {productIds.map(product => (
+              <option key={product}>{product}</option>
             ))}
           </select>
         </div>
@@ -40,7 +41,7 @@ const Posts = ({ products, posts, viewers, loading, changePosts, changeViewer })
           <div className="float-right">
             <label htmlFor="sel1">Choose Viewer ID:&nbsp;&nbsp;</label>
             <select className="custom-select" onChange={onSelectViewer} id="select1">
-              {viewers.map(viewer => (
+              {viewerIds.map(viewer => (
                 <option key={viewer}>{viewer}</option>
               ))}
             </select>

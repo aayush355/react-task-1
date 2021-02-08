@@ -10,42 +10,54 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(3);
-  const [viewers, setViewers] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  const [viewerId, setViewerId] = useState(1);
+  const [productId, setProductId] = useState(1);
   let productArray = [];
+  let [productsMap] = useState(new Map());
 
   useEffect(() => {
     const fetchPosts = async () => {
-      setLoading(true);
+      //setLoading(true);
       let productCount = 20;
-      let i = 0;
+      let i = 0, j = 0;
       let res;
       for (i = 0; i <= productCount; i++) {
         res = await axios.get('http://www.i2ce.in/reviews/' + i);
-        productArray.push(res.data);
+        //productArray.push(res.data);
+        let viewerMap = new Map();
+        viewerMap.set(null, res.data)
+        productsMap.set(res.data.reviews[0].product_id, viewerMap);
+        for (j = 1; j <= 10; j++) {
+          res = await axios.get('http://www.i2ce.in/reviews/' + i + '/' + j);
+          //productArray.push(res.data);
+          viewerMap.set(j, res.data)
+          productsMap.set(res.data.reviews[0].product_id, viewerMap);
+        }
       }
-      productArray.shift();
-      setPosts(productArray[2].reviews);
+      productsMap.forEach(product => {
+        productArray.push(product.get(viewerId))
+      })
+      setPosts(productsMap.get(productId).get(viewerId).reviews);
       setProducts(productArray);
-      setLoading(false);
+      //setLoading(false);
     };
     fetchPosts();
   }, []);
 
-  const changePosts = (id) => {
-    setPosts(products[id - 1].reviews);
+  const changePosts = (productid) => {
+    let id = parseInt(productid);
+    setProductId(id)
+    console.log(productsMap.get(id).get(viewerId).reviews);
+    setPosts(productsMap.get(id).get(viewerId).reviews);
   }
 
-  const changeViewer = (id) => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      let res;
-      let query = 'http://www.i2ce.in/reviews/' + posts[0].product_id + '/'+id;
-      res = await axios.get(query);
-      console.log(query);
-      console.log(res)
-      setLoading(false);
-    };
-    fetchPosts();
+  const changeViewer = (viewId) => {
+    let id = parseInt(viewId);
+    setViewerId(id)
+    let productTemp = productsMap.get(productId);
+    let viewersTemp = productTemp.get(id)
+    let reviewsTemp = viewersTemp.reviews;
+    setPosts(reviewsTemp);
   }
 
   // Get current posts
@@ -59,7 +71,7 @@ const App = () => {
   return (
     <div className='container mt-5'>
       <h1 className='text-primary mb-3'>My Products</h1>
-      <Posts products={products} posts={currentPosts} viewers={viewers} loading={loading} changePosts={changePosts} changeViewer={changeViewer} />
+      <Posts products={products} posts={currentPosts} loading={loading} changePosts={changePosts} changeViewer={changeViewer} />
       <Pagination
         postsPerPage={postsPerPage}
         totalPosts={posts.length}
