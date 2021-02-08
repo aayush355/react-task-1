@@ -2,14 +2,12 @@ import React, { useState } from 'react';
 import './Posts.css';
 import Stars from './Stars';
 
-const Posts = ({ products, posts, loading, changePosts, changeViewer }) => {
+const Posts = ({ posts, changePosts, changeViewer }) => {
   const [showAll, setShowAll] = useState(false);
-  const [viewerIds] = useState([1,2,3]);
-  const [productIds] = useState([1,2,3]);
+  const [viewerIds] = useState([1,2,3,4,5,6,7,8,9,10]);
+  const [productIds] = useState([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
   const [buttonText, setButtonText] = useState('Show All Ratings');
-  if (loading) {
-    return <h2>Loading...</h2>;
-  }
+
   const toggleRatings = () => {
     if (!showAll) {
       setShowAll(true);
