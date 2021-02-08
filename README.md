@@ -1,12 +1,4 @@
-# Simple React Pagination
+`npm install`
+`npm start`
 
-> Frontend pagination example using React with Hooks
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm install`
-
-### `npm start`
-# react-task-1
+react-task-1
